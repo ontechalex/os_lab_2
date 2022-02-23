@@ -1,0 +1,8 @@
+env
+help
+cd hi
+env
+dir
+echo hi
+echo hi
+quit
