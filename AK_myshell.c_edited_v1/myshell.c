@@ -20,6 +20,7 @@ int getAmpersand(char *input);
 void recieveCommand(char *op,char *ext);
 void tokenize(char *input,char *op,char *ext);
 bool Scmp(char *s1, char *s2);
+void StringConCat(char *op, char *ext, char *Combine);
 char cwd[PATH_MAX];
 char path[INPUT_SIZE];
 char path2[INPUT_SIZE];
@@ -27,39 +28,46 @@ char *envvar = "parent";
 int failedForks = 0;
 char *array[INPUT_SIZE + 1]; // allocated memeory for pointer to point
 
-int main(int argc, char*argv[]){
+int main(int argc, char**argv){
+	int NUMargs = argc;
 	char args[ent][entL]; // used for file extraction with batchfile.txt
 	int extract = 0; // recording the number of extracted lines from batchfile.txt
-	if (argc == 2){
-		FILE *pToFile = fopen(argv[1],"r");
-		while( fgets(args[extract],INPUT_SIZE,pToFile)){
-			args[extract][strlen(args[extract]) -1] = '\0';
-			extract++;
-		}
-		fclose(pToFile);
-		if(!getenv(envvar)){
-			printf("\nThe %s env var could not be obtained.\n", envvar);
-			return 0;
-		} 
-		strcpy(path,getenv(envvar));
-    		printf("PATH: %s\n", path);
-	}
+	if (argc == 4 && strcmp(argv[1],"^")==0){
+		recieveCommand(argv[2],argv[3]);
+		return 0;
+	} else if (argc == 2){
+		if (strcmp(argv[1],"batchfile.txt")==0){
+			FILE *pToFile = fopen(argv[1],"r");
+			while( fgets(args[extract],INPUT_SIZE,pToFile)){
+				args[extract][strlen(args[extract]) -1] = '\0';
+				extract++;
+			}
+			extract = extract - 1;
+			fclose(pToFile);
+    		} else { puts("!!NOT VALID!!"); return 0; }
+	} else if (argc != 1) { puts("!!NOT VALID!!"); return 0; }
+	if(!getenv(envvar)){
+		printf("\nThe %s env var could not be obtained.\n", envvar);
+		return 0;
+	} 
+	strcpy(path,getenv(envvar));
 	int cmd = 0;
 	while(1){
-		if (cmd > extract){break;}
+		if (cmd > extract){return 0;}
 		char input[INPUT_SIZE] = {};
 		char op[ent] = {};
 		char ext[ent] = {};
-		recieveInput(input,op,ext,argc,cmd,args);
-		if (Scmp(op,"quit")== true && strlen(ext) == 0){return 0;}
+		recieveInput(input,op,ext,NUMargs,cmd,args);
+		if (extract > 0){ printf("%s %s",op,ext); sleep(2); }
+		if (Scmp(op,"quit")== true && strlen(ext) == 0){ printf("\n"); return 0;}
 		else if (Scmp(op,"quit")== true && strlen(ext) != 0) { printf("\nNOT VALID\n"); continue;}
 		if (Scmp(op,"cd") == true){
 			int chPWD = 0;
-			if (extract > 0){ printf("%s %s",op,ext); cmd ++; sleep(2); }
+			if (extract > 0){ cmd ++; }
     			if(strlen(ext)==0){system("pwd"); }
     			else { 
     				chPWD = chdir(ext); 
-    				if (chPWD == -1){ perror("Unsuccessful directory chnage, enivorment var unchanged");}
+    				if (chPWD == -1){ printf("\nUnsuccessful directory chnage, enivorment var unchanged");}
     				else { printf("\n//Dir changed ||> %s\n\n", getcwd(cwd, sizeof(cwd))); }
     			} 
     			fflush(stdout);
@@ -70,9 +78,10 @@ int main(int argc, char*argv[]){
 		pid_t pid = fork();
 		if (pid == 0) {
 		    // inside the child process, execute the command
-		    //execv(path,argv[0]);
-		    if (extract > 0){ printf("%s %s",op,ext); sleep(2); }
-		    recieveCommand(op,ext);
+		    if (strlen(ext) == 0) { ext[0] = '!'; }
+		    char *tobeSent[] = {"./myshell","^",op,ext,NULL};
+		    if (execv(path,tobeSent) == -1 ) { printf("\nExecv Has faild\n"); return 0; };
+		    //recieveCommand(op,ext);
 		} else if (pid > 0) {
 		    // inside the parent process, wait for child to finish
 		    if (extract > 0){ cmd++; }
@@ -92,7 +101,8 @@ int main(int argc, char*argv[]){
 		        break;
 		    }
 		}
-	}
+	}	
+
 }
 
 bool Scmp(char *s1, char *s2){
@@ -106,22 +116,36 @@ bool Scmp(char *s1, char *s2){
 	return same;
 }
 
+void StringConCat(char *op, char *ext, char *Combine){
+	int L = strlen(op) + strlen(ext) + 1;
+	memset(Combine,'\0',L);
+	int i = 0;
+	for(int i = 0; i<L ;i++){
+		if (i < strlen(op)){ Combine[i] = op[i]; continue; }
+		else if (i == strlen(op)) { Combine[i] = ' '; continue; }
+		Combine[i] = ext[i - (strlen(op) + 1)]; 
+	}
+	Combine[L] = '\0';
+}
+
 void recieveCommand(char *op,char *ext) {
     // checks input for UNIX command style and converts to Linux command
     // ex. clr is coverted to clear
+    if (strlen(ext) == 1 && ext[0] == '!'){ ext[0] = '\0'; }
+    char Combine[INPUT_SIZE];
     int success;
     failedForks = 0;
-    printf("\n");
+    printf("\n\n");
     if (Scmp(op,"clr") == true){ success = system("clear");
     }else if (Scmp(op,"dir") == true){
     	if(strlen(ext) == 0){ success = system("dir");}
-    	else{ strcat(op," "); strcat(op,ext); success = system(op);}
+    	else { StringConCat(op,ext,Combine); success = system(Combine);}
     } else if (Scmp(op,"echo") == true){
     	if (strlen(ext) == 0){success = system("echo");}
-    	else{ strcat(op," "); strcat(op,ext); success = system(op);}
+    	else{ StringConCat(op,ext,Combine); success = system(Combine);}
     } else if (Scmp(op,"help") == true){
     	if (strlen(ext) == 0){ success = system("bash -c help"); }
-    	else { success = system("bash -c help"); }//success = -1; printf("\nNOT VALID\n"); }
+    	else { success = system("bash -c help"); }
     } else if (Scmp(op,"pause") == true){
     	if (strlen(ext) != 0) { success = -1; printf("\nNOT VALID\n"); }
     	else {
@@ -137,8 +161,6 @@ void recieveCommand(char *op,char *ext) {
     	else { success = -1; printf("\nNOT VALID\n"); }
     }else { success = -1; printf("\nNOT VALID\n");}
     
-
-    //success = system(op);
     printf("\n");
     int sig;
     if (success == -1) {
