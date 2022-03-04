@@ -35,7 +35,7 @@ void ShellInputErrorPrint(){
 	printf("	./myshell\n	./myshell batchfile.txt\n	./myshell ^ op ext\n");
 	printf("op: cd,dir,help,quit,clr,echo,pause,env\n");
 	printf("ext: examples 'hi' - where hi is a folder or something like 'hi there' for echo\n");
-	printf("for (^) input, ext filter with help you must type cmd line as \n ./myshell ^ help '| filter' \n")
+	printf("for (^) input, ext filter with help you must type cmd line as \n ./myshell ^ help '| filter' \n");
 }
 
 int main(int argc, char**argv){
