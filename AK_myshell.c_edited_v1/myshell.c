@@ -21,12 +21,22 @@ void recieveCommand(char *op,char *ext);
 void tokenize(char *input,char *op,char *ext);
 bool Scmp(char *s1, char *s2);
 void StringConCat(char *op, char *ext, char *Combine);
+void ShellInputErrorPrint();
+int HelpWithFilter(char *HelpFilt);
 char cwd[PATH_MAX];
 char path[INPUT_SIZE];
 char path2[INPUT_SIZE];
 char *envvar = "parent";
 int failedForks = 0;
 char *array[INPUT_SIZE + 1]; // allocated memeory for pointer to point
+
+void ShellInputErrorPrint(){
+	printf("NOT A VALID INPUT \nVALID CMD LINE INPUTS \n");
+	printf("	./myshell\n	./myshell batchfile.txt\n	./myshell ^ op ext\n");
+	printf("op: cd,dir,help,quit,clr,echo,pause,env\n");
+	printf("ext: examples 'hi' - where hi is a folder or something like 'hi there' for echo\n");
+	printf("for (^) input, ext filter with help you must type cmd line as \n ./myshell ^ help '| filter' \n")
+}
 
 int main(int argc, char**argv){
 	int NUMargs = argc;
@@ -44,8 +54,8 @@ int main(int argc, char**argv){
 			}
 			extract = extract - 1;
 			fclose(pToFile);
-    		} else { puts("!!NOT VALID!!"); return 0; }
-	} else if (argc != 1) { puts("!!NOT VALID!!"); return 0; }
+    		} else { ShellInputErrorPrint(); return 0; }
+	} else if (argc != 1) { ShellInputErrorPrint(); return 0; }
 	if(!getenv(envvar)){
 		printf("\nThe %s env var could not be obtained.\n", envvar);
 		return 0;
@@ -128,6 +138,20 @@ void StringConCat(char *op, char *ext, char *Combine){
 	Combine[L] = '\0';
 }
 
+int HelpWithFilter(char *HelpFilt){
+	pid_t pidH = fork();
+	if (pidH == 0){
+		if (execl("/bin/bash", "bash", "-c", HelpFilt, NULL) == -1){
+			printf("\nExecl for Help with filters Has faild\n"); return -1;
+		}
+	} else if (pidH > 0){
+		while(wait(NULL) > 0);
+	} else {
+		printf("Fork failed, child process not created.\n"); return -1;
+	}
+	return 0;
+}
+
 void recieveCommand(char *op,char *ext) {
     // checks input for UNIX command style and converts to Linux command
     // ex. clr is coverted to clear
@@ -144,8 +168,8 @@ void recieveCommand(char *op,char *ext) {
     	if (strlen(ext) == 0){success = system("echo");}
     	else{ StringConCat(op,ext,Combine); success = system(Combine);}
     } else if (Scmp(op,"help") == true){
-    	if (strlen(ext) == 0){ success = system("bash -c help"); }
-    	else { success = system("bash -c help"); }
+    	if (strlen(ext) == 0){ success = HelpWithFilter(op);}
+    	else { StringConCat(op,ext,Combine); success = HelpWithFilter(Combine);}
     } else if (Scmp(op,"pause") == true){
     	if (strlen(ext) != 0) { success = -1; printf("\nNOT VALID\n"); }
     	else {
