@@ -25,17 +25,15 @@ void StringConCat(char *op, char *ext, char *Combine);
 void ShellInputErrorPrint();
 int HelpWithFilter(char *HelpFilt);
 char cwd[PATH_MAX];//used for command line prompt 
-char path[INPUT_SIZE]; //used for excv after fork has been called
-char *envvar = "parent"; //setting the env var to retrive
+char path[INPUT_SIZE]; //used for storing cwd for parent env set
 int failedForks = 0; //used failed fork attempts in int main()
 char *array[INPUT_SIZE + 1]; // allocated memeory for pointer to point
 
 void ShellInputErrorPrint(){ // Used for printing out list of acceptable input types when wrong user input sent
 	printf("NOT A VALID INPUT \nVALID CMD LINE INPUTS \n");
-	printf("	./myshell\n	./myshell batchfile.txt\n	./myshell ^ op ext\n");
+	printf("	<simple method> ./myshell\n	<batchfile method> ./myshell batchfile.txt\n");
 	printf("op: cd,dir,help,quit,clr,echo,pause,env\n");
 	printf("ext: examples 'hi' - where hi is a folder or something like 'hi there' for echo\n");
-	printf("for (^) input, ext filter with help you must type cmd line as \n ./myshell ^ help '| filter' \n");
 }
 
 int main(int argc, char**argv){ // main uses argc to count num of argumments and argv is used to access each argumment 
@@ -56,11 +54,8 @@ int main(int argc, char**argv){ // main uses argc to count num of argumments and
 			fclose(pToFile);
     	} else { ShellInputErrorPrint(); return 0; }// if batchfile not found state what is acceptable user input 
 	} else if (argc != 1) { ShellInputErrorPrint(); return 0; }
-	if(!getenv(envvar)){ // get the path for the parent env var and see if false for not found  
-		printf("\nThe %s env var could not be obtained.\n", envvar);
-		return 0;
-	} 
-	strcpy(path,getenv(envvar));// copy the paretn env to path global array
+	getcwd(path,sizeof(path)); // save a copy of current cwd and then set a parent env that can only be seen once in the shell usign 'env' 
+	setenv("parent",strcat(path,"/myshell"),1);
 	int cmd = 0; // used mainly for batchfile, to only allow the while loop to loop up to the num of extracted lines  
 	while(1){ // cont loop until a quit or up to the num of extracted lines 
 		if (cmd > extract){return 0;}
@@ -90,7 +85,7 @@ int main(int argc, char**argv){ // main uses argc to count num of argumments and
 		    // inside the child process, execute the command
 		    if (strlen(ext) == 0) { ext[0] = '!'; } // used if ext has nothing, makes sure execv() only takes one null
 		    char *tobeSent[] = {"./myshell","^",op,ext,NULL};
-		    if (execv(path,tobeSent) == -1 ) { printf("\nExecv Has faild\n"); return 0; }; // see if execv() fails or not 
+		    if (execv(getenv("parent"),tobeSent) == -1 ) { printf("\nExecv Has faild\n"); return 0; }; // see if execv() fails or not 
 		} else if (pid > 0) {
 		    // inside the parent process, wait for child to finish
 		    if (extract > 0){ cmd++; }// increase cmd bc batchfile was used
@@ -118,7 +113,7 @@ bool Scmp(char *s1, char *s2){ // if length is not the same then op's are not sa
 	if(strlen(s1) != strlen(s2)) {return false;}
 	bool same = false; 
 	if(strlen(s1) == strlen(s2)) {same = true; // initially think that the string arrays are the same 
-		for(int i = 1; i<strlen(s1) ;i++){ // go through both string arrays to see if something is diff
+		for(int i = 0; i<strlen(s1) ;i++){ // go through both string arrays to see if something is diff
 			if(s1[i] != s2[i]){ same = false; break;} // if diff then set same to false and stop checking
 		}
 	}
@@ -162,7 +157,9 @@ void recieveCommand(char *op,char *ext) {
 	// sel a op with some checking if ext is present for invalid or different output for that sel op
 	// dir, echo, and help use concat function called StringConCat()  for when ext is present 
 	// and help uses HelpWithFilter() for when more filter is present and if not returns -1 
-    if (Scmp(op,"clr") == true){ success = system("clear");
+    if (Scmp(op,"clr") == true){ 
+			if(strlen(ext) == 0){ success = system("clear");}
+			else { success = -1; printf("\nNOT VALID\n");}
     }else if (Scmp(op,"dir") == true){
     	if(strlen(ext) == 0){ success = system("dir");}
     	else { StringConCat(op,ext,Combine); success = system(Combine);}
