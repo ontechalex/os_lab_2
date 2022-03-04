@@ -1,8 +1,10 @@
 env
 help
+dir
 cd hi
 env
 dir
 echo hi
+help | more
 echo hi
-quit
+help | more
