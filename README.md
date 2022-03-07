@@ -78,38 +78,38 @@ supports both command line input and batchfile input.
     The quit command will end the operation of the shell and exit the process.
 
 ### 2.3 I/O Redirection
-    This shell also supports I/O redirection from and to files. This can be done by
+  This shell also supports I/O redirection from and to files. This can be done by
   utlilizing the >, >>, and < characters. > and >> are used to direct
   output to a specified file while < takes input from a specified file. All the
   commands specified in the example sections can be used to test the command line.
 
   #### 2.3.1 EXAMPLE
 
-  'adder < in.txt'
+  `adder < in.txt`
 
-    In this example the adder will read whatever is in in.txt and use it as command
+  In this example the adder will read whatever is in in.txt and use it as command
   line arguements to the program adder. This will then output to whatever the total
   is to the command line.
 
   #### 2.3.2 EXAMPLE
 
-  'adder 10 5 > out.txt'
+  `adder 10 5 > out.txt`
 
-    In this example, the adder will take in 10 and 5 as the command line arguements.
+  In this example, the adder will take in 10 and 5 as the command line arguements.
   The result of this will then be sent to the file out.txt.
 
   #### 2.3.3 EXAMPLE
 
-  'adder 10 5 < in.txt > out.txt'
+  `adder 10 5 < in.txt > out.txt`
 
-    In this example, the shell will run the program adder using 10 and 5 as the
+  In this example, the shell will run the program adder using 10 and 5 as the
   command line arguements. In addition to this, it will read whatever is in in.txt
   and use that as additional command line arguements. The outout will then be directed
   to out.txt. Because we used the > it will truncate and overwrite whatever
   is there, if we wanted to append we would use the >> instead.
 
 ### 2.4 Other features
-    In some cases a programmer may want to use a batchfile in order to run commands
+  In some cases a programmer may want to use a batchfile in order to run commands
   automatically. This can be done by specifying commands in a text file named
   "Batchfile.txt". The shell will then read the contents of the text file and
   attempt to run the commands.
