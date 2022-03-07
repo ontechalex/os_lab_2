@@ -21,7 +21,7 @@ supports both command line input and batchfile input.
 
   '<' : Used in I/O redirection, see section 2.3 for more information.
 
-###2.2 Basic Commands
+### 2.2 Basic Commands
   NAME cd <directory>
 
   DESCRIPTION
