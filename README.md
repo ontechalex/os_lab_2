@@ -1,6 +1,6 @@
 # os_lab_2
 
-###1.0 INTRODUCTION
+### 1.0 INTRODUCTION
 
 1.1 What is Simple Shell?
 Simple Shell is a shell made by Alexander Campbell, Atharsan Kennedy, and Joey
@@ -8,9 +8,9 @@ Villafeurte. This shell can use most simple commands. This manual will outline
 the functionalities of the shell and how to use its various commands. This shell
 supports both command line input and batchfile input.
 
-###2.0 FEATURES
+### 2.0 FEATURES
 
-###2.1 Special Characters
+### 2.1 Special Characters
 
   '&' : Use the amerpsand symbol at the end of your command to have it run within
     the environment you are currently in.
@@ -77,13 +77,13 @@ supports both command line input and batchfile input.
   DESCRIPTION
     The quit command will end the operation of the shell and exit the process.
 
-###2.3 I/O Redirection
+### 2.3 I/O Redirection
     This shell also supports I/O redirection from and to files. This can be done by
   utlilizing the '>', '>>', and '<' characters. '>' and '>>' are used to direct
   output to a specified file while '<' takes input from a specified file. All the
   commands specified in the example sections can be used to test the command line.
 
-  ####2.3.1 EXAMPLE
+  #### 2.3.1 EXAMPLE
 
   adder < in.txt
 
@@ -91,14 +91,14 @@ supports both command line input and batchfile input.
   line arguements to the program adder. This will then output to whatever the total
   is to the command line.
 
-  ####2.3.2 EXAMPLE
+  #### 2.3.2 EXAMPLE
 
   adder 10 5 > out.txt
 
     In this example, the adder will take in 10 and 5 as the command line arguements.
   The result of this will then be sent to the file out.txt.
 
-  ####2.3.3 EXAMPLE
+  #### 2.3.3 EXAMPLE
 
   adder 10 5 < in.txt > out.txt
 
@@ -108,7 +108,7 @@ supports both command line input and batchfile input.
   to out.txt. Because we used the '>' it will truncate and overwrite whatever
   is there, if we wanted to append we would use the '>>' instead.
 
-###2.4 Other features
+### 2.4 Other features
     In some cases a programmer may want to use a batchfile in order to run commands
   automatically. This can be done by specifying commands in a text file named
   "Batchfile.txt". The shell will then read the contents of the text file and
