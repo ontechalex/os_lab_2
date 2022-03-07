@@ -22,57 +22,51 @@ supports both command line input and batchfile input.
   '<' : Used in I/O redirection, see section 2.3 for more information.
 
 ### 2.2 Basic Commands
-  NAME cd <directory>
+  NAME `cd <directory>`
 
   DESCRIPTION
     The cd command will change the current working directory to the specified
   directory specified by <directory>. This will change the shell's execution
   environment to <directory>.
 
-  NAME clr
+  NAME `clr`
 
   DESCRIPTION
     The clr command will clear the current screen in the terminal. This includes
     all outputs, previous inputs, etc.
 
-  NAME dir <directory>
+  NAME `dir <directory>`
 
   DESCRIPTION
     The dir command will list information associated with the directory specified
   by <directory>.
 
-  NAME dir <directory>
-
-  DESCRIPTION
-    The dir command will list information associated with the directory specified
-  by <directory>.
-
-  NAME environ
+  NAME `environ`
 
   DESCRIPTION
     The environ command will list all the environment variables as strings in the
   terminal. Environment variables are similar to commands in that they invoke a
   process, such as node in Node.js. These are set outside of the terminal.
 
-  NAME echo <comment>
+  NAME `echo <comment>`
 
   DESCRIPTION
     The echo command will simply output whatever is in <comment>. This command can
   also be leveraged using i/o redirection to print from the output of another
   command (see 2.3 for an example.)
 
-  NAME help
+  NAME `help`
 
   DESCRIPTION
     The help command will display options and commands that are available to the user.
 
-  NAME pause
+  NAME `pause`
 
   DESCRIPTION
     The pause command will pause the operation of the shell until more input is
   recieved.
 
-  NAME quit
+  NAME `quit`
 
   DESCRIPTION
     The quit command will end the operation of the shell and exit the process.
