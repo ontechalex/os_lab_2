@@ -1,0 +1,4 @@
+total 112
+-rwxr-xr-x  1 alexandercampbell  staff  50264 21 Feb 19:58 a.out
+-rw-r--r--  1 alexandercampbell  staff      0 21 Feb 20:07 listFile.txt
+-rw-r--r--@ 1 alexandercampbell  staff   2439 18 Feb 19:19 myshell.c
