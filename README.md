@@ -72,6 +72,8 @@ Simple Shell is a shell made by Alexander Campbell, Atharsan Kennedy, and Joey V
   In this example the adder will read whatever is in in.txt and use it as command line arguements to the program adder. This will then output to whatever the total is to the command line.
 
   #### 2.3.2 EXAMPLE
+  
+  For context, adder.c is simply a program that adds whatever numbers you pass in as arguements. It is used to demonstrate input and output redirection.
 
   `adder 10 5 > out.txt`
 
