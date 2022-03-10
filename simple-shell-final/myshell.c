@@ -193,8 +193,8 @@ void recieveCommand(char **argv) {
 		} else {
 			args[i+1] = END_FLAG;
 		}
-		
-		if (i >= 4) {
+
+		if (i >= 3) {
 			int file2Exists = matchCharacters(args[i-2], ".txt"); // checks if there is a second file
 			
 			if (file2Exists == 1) {
@@ -265,8 +265,7 @@ void recieveCommand(char **argv) {
 		strcpy(ext, extStr); // fixes the ext string to only be commands
     }
 	
-	
-    if (strcmp(op,"clr") == 0){ 
+	if (strcmp(op,"clr") == 0){ 
 	if(strlen(ext) == 0) { success = system("clear");}
 	else { success = -1; }
     }else if (strcmp(op, "dir") == 0) {
@@ -297,7 +296,7 @@ void recieveCommand(char **argv) {
 		char opStr[opLength];
 		strcpy(opStr, "./");
 		strcat(opStr, op);
-		
+
 		StringConCat(opStr, ext, Combine);
 		
 		success = system(Combine);
@@ -360,17 +359,3 @@ int matchCharacters(char *input, char *pattern) {
 	
 	return 0; // otherwise will return a 0 indicating the pattern cannot be found
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
