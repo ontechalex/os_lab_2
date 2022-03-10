@@ -1,10 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
-
+// adds up the numbers that are passed as arguements
 int main(int argc, char *argv[]){ 
 	int total = 0;
 	if (argc < 2) {
-		printf("Invalid arguement amount\n");
+		printf("Invalid arguement amount, please input at least 1 number.\n");
 		return -1;
 	} else {
 		for (int i = 1; i < argc; i++) {
