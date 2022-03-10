@@ -63,7 +63,7 @@ Simple Shell is a shell made by Alexander Campbell, Atharsan Kennedy, and Joey V
     The quit command will end the operation of the shell and exit the process.
 
 ### 2.3 I/O Redirection
-  This shell also supports I/O redirection from and to files. I/O redirection is the process of changing where a program recieves input and outputs the output. This can be done by utlilizing the >, >>, and < characters. > and >> are used to direct output to a specified file while < takes input from a specified file. All the commands specified in the example sections can be used to test the command line.
+  This shell also supports I/O redirection from and to files. I/O redirection is the process of changing where a program recieves input and outputs the output. This can be done by utlilizing the >, >>, and < characters. > and >> are used to direct output to a specified file while < takes input from a specified file. All the commands specified in the example sections can be used to test the command line. The videos input_test.webm and output_test.webm show case this.
 
   #### 2.3.1 EXAMPLE
 
